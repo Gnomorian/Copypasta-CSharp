@@ -4,10 +4,6 @@ using System.Windows.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
-//TODO: modify click event so settings menu updates the settings
-//TODO: reverse the list of items so exit is always at the bottom for people who set 100s of clips and therefore cant close
-//TODO: add MenuItem to open settings window, then hide settings window at startup
-//TODO: in ConfirmClicked add handling for reducing maxClicks below current max when it is currently filled bigger than new max.
 //TODO: do i need a log?
 
 namespace Copypasta

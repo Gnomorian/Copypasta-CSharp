@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using System.IO;
 
 namespace Copypasta
 {
@@ -40,9 +41,13 @@ namespace Copypasta
 
         public int GetSetting(string subKey)
         {
-            int rInt = (int)Registry.GetValue(key, subKey, -1);
+            object rInt = Registry.GetValue(key, subKey, -1);
+            if(rInt == null)
+            {
+                return -1;
+            }
 
-            return rInt;
+            return (int)rInt;
         }
         /* set the key in the registry to the given value */
         public void SetSetting(string subKey, int value)
@@ -154,12 +159,24 @@ namespace Copypasta
 
             // Create a tray icon.
             trayIcon = new NotifyIcon();
-            trayIcon.Text = "Copypasta";
-            trayIcon.Icon = new Icon("./pasta.ico");
+            if(File.Exists("pasta.ico"))
+            {
+                trayIcon.Text = "Copypasta";
+                trayIcon.Icon = new Icon("pasta.ico");
+            } else
+            {
+                trayIcon.Icon = SystemIcons.Application;
+            }   
 
             // Add the menu to the tray icon.
             trayIcon.ContextMenu = trayMenu;
             trayIcon.Visible = true;
+        }
+
+        private bool IconExists(string path)
+        {
+
+            return true;
         }
 
         protected override void OnLoad(EventArgs e)

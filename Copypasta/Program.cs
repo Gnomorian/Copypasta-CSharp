@@ -117,7 +117,7 @@ namespace Copypasta
         private void AddClip(string clip)
         {
             System.Windows.Forms.Menu.MenuItemCollection items = trayIcon.ContextMenu.MenuItems;
-            if (items.Count > maxClips)
+            if (items.Count > maxClips+1)
             {
                 items.RemoveAt(2);
             }

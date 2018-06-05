@@ -4,8 +4,6 @@ using System.Windows.Threading;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
-//TODO: do i need a log?
-
 namespace Copypasta
 {
     public class CopypastaApp : Form

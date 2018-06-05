@@ -185,6 +185,7 @@ namespace Copypasta
             ShowInTaskbar = false;
             // initialize the settings form
             InitializeComponent();
+            PostInitializeComponent();
 
             base.OnLoad(e);
         }
@@ -216,6 +217,19 @@ namespace Copypasta
                 this.Visible = false;
             }
         }
+        /* Designer doesnt like you touching InitializeComponent, so this is run afterwards to apply my modifications */
+        private void PostInitializeComponent()
+        {
+            this.numMaxClips.Minimum = 0;
+            this.numMaxClips.Maximum = 1000;
+            this.numMaxClips.Value = maxClips;
+
+            this.numTimerInterval.Minimum = 0;
+            this.numTimerInterval.Maximum = 10000;
+            this.numTimerInterval.Value = timerInterval;
+
+            this.btnConfirm.Click += ConfirmClicked;
+        }
 
         private void InitializeComponent()
         {
@@ -245,11 +259,9 @@ namespace Copypasta
             // numMaxClips
             // 
             this.numMaxClips.Location = new System.Drawing.Point(6, 10);
-            this.numMaxClips.Minimum = 0;
             this.numMaxClips.Name = "numMaxClips";
             this.numMaxClips.Size = new System.Drawing.Size(56, 20);
             this.numMaxClips.TabIndex = 2;
-            this.numMaxClips.Value = maxClips;
             // 
             // lblMaxClips
             // 
@@ -268,7 +280,6 @@ namespace Copypasta
             this.btnConfirm.TabIndex = 4;
             this.btnConfirm.Text = "Confirm";
             this.btnConfirm.UseVisualStyleBackColor = true;
-            this.btnConfirm.Click += ConfirmClicked;
             // 
             // grpTimerInterval
             // 
@@ -286,9 +297,6 @@ namespace Copypasta
             this.numTimerInterval.Name = "numTimerInterval";
             this.numTimerInterval.Size = new System.Drawing.Size(56, 20);
             this.numTimerInterval.TabIndex = 3;
-            this.numTimerInterval.Value = timerInterval;
-            this.numTimerInterval.Minimum = 0;
-            this.numTimerInterval.Maximum = 10000;
             // 
             // lblTimerInterval
             // 

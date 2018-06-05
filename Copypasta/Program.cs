@@ -57,10 +57,6 @@ namespace Copypasta
         /* Initialize settings from the registry */
         public void InitSettings()
         {
-            string userRoot = "HKEY_CURRENT_USER";
-            string key = "Copypasta";
-            string keyName = userRoot + "\\" + key;
-
             int regKey = GetSetting("timer_interval");
             if (regKey == -1)
             {
@@ -123,7 +119,7 @@ namespace Copypasta
             System.Windows.Forms.Menu.MenuItemCollection items = trayIcon.ContextMenu.MenuItems;
             if (items.Count > maxClips)
             {
-                items.RemoveAt(1);
+                items.RemoveAt(2);
             }
             items.Add(clip, ReplaceClipboard);
         }
@@ -143,6 +139,11 @@ namespace Copypasta
                 SetSetting("timer_interval", timerInterval);
             }
         }
+        /* When the "Settings" tray menu item is clicked */
+        private void OnSettings(object sender, EventArgs e)
+        {
+            this.Visible = true;
+        }
 
         /* Setup the tray */
         public CopypastaApp()
@@ -156,6 +157,7 @@ namespace Copypasta
             // Create a tray menu with an Exit menu item.
             trayMenu = new ContextMenu();
             trayMenu.MenuItems.Add("Exit", OnExit);
+            trayMenu.MenuItems.Add("Settings", OnSettings);
 
             // Create a tray icon.
             trayIcon = new NotifyIcon();
@@ -173,15 +175,9 @@ namespace Copypasta
             trayIcon.Visible = true;
         }
 
-        private bool IconExists(string path)
-        {
-
-            return true;
-        }
-
         protected override void OnLoad(EventArgs e)
         {
-            Visible = true;
+            Visible = false;
             ShowInTaskbar = false;
             // initialize the settings form
             InitializeComponent();
@@ -233,6 +229,7 @@ namespace Copypasta
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CopypastaApp));
             this.grpMaxClips = new System.Windows.Forms.GroupBox();
             this.numMaxClips = new System.Windows.Forms.NumericUpDown();
             this.lblMaxClips = new System.Windows.Forms.Label();
@@ -313,7 +310,8 @@ namespace Copypasta
             this.Controls.Add(this.grpTimerInterval);
             this.Controls.Add(this.btnConfirm);
             this.Controls.Add(this.grpMaxClips);
-            this.Name = "Copypasta";
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "CopypastaApp";
             this.grpMaxClips.ResumeLayout(false);
             this.grpMaxClips.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxClips)).EndInit();
@@ -321,6 +319,7 @@ namespace Copypasta
             this.grpTimerInterval.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numTimerInterval)).EndInit();
             this.ResumeLayout(false);
+
         }
 
     }

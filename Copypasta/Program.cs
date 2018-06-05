@@ -2,7 +2,6 @@
 using System.Drawing;
 using System.Windows.Threading;
 using System.Windows.Forms;
-using static System.Windows.Forms.Menu;
 using Microsoft.Win32;
 
 //TODO: modify click event so settings menu updates the settings
@@ -122,7 +121,7 @@ namespace Copypasta
         /* Adds a new Clip to the Menu and removes eldest clip if we are adding more than the maxClips */
         private void AddClip(string clip)
         {
-            MenuItemCollection items = trayIcon.ContextMenu.MenuItems;
+            System.Windows.Forms.Menu.MenuItemCollection items = trayIcon.ContextMenu.MenuItems;
             if (items.Count > maxClips)
             {
                 items.RemoveAt(1);
@@ -278,6 +277,7 @@ namespace Copypasta
             this.numTimerInterval.TabIndex = 3;
             this.numTimerInterval.Value = timerInterval;
             this.numTimerInterval.Minimum = 0;
+            this.numTimerInterval.Maximum = 10000;
             // 
             // lblTimerInterval
             // 

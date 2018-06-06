@@ -2,19 +2,17 @@
 using System.Drawing;
 using System.Windows.Threading;
 using System.Windows.Forms;
-using Microsoft.Win32;
 using System.IO;
 
 namespace Copypasta
 {
     public class CopypastaApp : Form
     {
+        private static Settings settings;
+
         // Tray Variables
         private NotifyIcon trayIcon;
         private ContextMenu trayMenu;
-
-        // Registry key to save to
-        private static string key = "HKEY_CURRENT_USER\\Copypasta";
 
         // a timer on the same thread as clipboard only works on the main thread.
         private static DispatcherTimer timer = new DispatcherTimer();
@@ -28,50 +26,12 @@ namespace Copypasta
         private NumericUpDown numTimerInterval;
         private Button btnConfirm;
 
-        // modifyable settings
-        private int maxClips = 10;
-        private int timerInterval = 200;
-
         [STAThread]
         public static void Main()
         {
+            settings = new Settings();
             CopypastaApp app = new CopypastaApp();
             Application.Run(app);
-        }
-
-        public int GetSetting(string subKey)
-        {
-            object rInt = Registry.GetValue(key, subKey, -1);
-            if(rInt == null)
-            {
-                return -1;
-            }
-
-            return (int)rInt;
-        }
-        /* set the key in the registry to the given value */
-        public void SetSetting(string subKey, int value)
-        {
-            Registry.SetValue(key, subKey, value);
-        }
-        /* Initialize settings from the registry */
-        public void InitSettings()
-        {
-            int regKey = GetSetting("timer_interval");
-            if (regKey == -1)
-            {
-                SetSetting("timer_interval", timerInterval);
-                regKey = timerInterval;
-            }
-            timerInterval = regKey;
-
-            regKey = GetSetting("max_clips");
-            if (regKey == -1)
-            {
-                SetSetting("max_clips", maxClips);
-                regKey = maxClips;
-            }
-            maxClips = regKey;
         }
 
         /* set settings of the timer */
@@ -117,7 +77,7 @@ namespace Copypasta
         private void AddClip(string clip)
         {
             System.Windows.Forms.Menu.MenuItemCollection items = trayIcon.ContextMenu.MenuItems;
-            if (items.Count > maxClips+1)
+            if (items.Count > settings.getMaxClips()+1)
             {
                 items.RemoveAt(2);
             }
@@ -126,17 +86,16 @@ namespace Copypasta
         /* event handler run when the settings menu button Confirm is clicked */
         private void ConfirmClicked(object sender, EventArgs e)
         {
-            if(this.numMaxClips.Value != maxClips)
+            if (this.numMaxClips.Value != settings.getMaxClips())
             {
-                maxClips = (int)this.numMaxClips.Value;
-                SetSetting("max_clips", maxClips);
+                settings.SetSetting("max_clips", (int)this.numMaxClips.Value);
             }
-            if (this.numTimerInterval.Value != timerInterval)
+            if (this.numTimerInterval.Value != settings.getTimerInterval())
             {
-                timerInterval = (int)this.numTimerInterval.Value;
                 timer.Stop();
-                timer.Interval = TimeSpan.FromMilliseconds(timerInterval);
-                SetSetting("timer_interval", timerInterval);
+                timer.Interval = TimeSpan.FromMilliseconds((int)this.numTimerInterval.Value);
+                settings.SetSetting("timer_interval", (int)this.numTimerInterval.Value);
+                timer.Start();
             }
         }
         /* When the "Settings" tray menu item is clicked */
@@ -149,10 +108,10 @@ namespace Copypasta
         public CopypastaApp()
         {
             // initialize settings from the registry
-            InitSettings();
+            settings.InitSettings();
             
             // setup the timer
-            SetTimer(timerInterval);
+            SetTimer(settings.getTimerInterval());
 
             // Create a tray menu with an Exit menu item.
             trayMenu = new ContextMenu();
@@ -218,11 +177,11 @@ namespace Copypasta
         {
             this.numMaxClips.Minimum = 0;
             this.numMaxClips.Maximum = 1000;
-            this.numMaxClips.Value = maxClips;
+            this.numMaxClips.Value = settings.getMaxClips();
 
             this.numTimerInterval.Minimum = 0;
             this.numTimerInterval.Maximum = 10000;
-            this.numTimerInterval.Value = timerInterval;
+            this.numTimerInterval.Value = settings.getTimerInterval();
 
             this.btnConfirm.Click += ConfirmClicked;
         }

@@ -24,6 +24,8 @@ namespace Copypasta
         private GroupBox grpTimerInterval;
         private Label lblTimerInterval;
         private NumericUpDown numTimerInterval;
+        private GroupBox grpStartup;
+        private CheckBox ckbStartup;
         private Button btnConfirm;
 
         [STAThread]
@@ -97,6 +99,7 @@ namespace Copypasta
                 settings.SetSetting("timer_interval", (int)this.numTimerInterval.Value);
                 timer.Start();
             }
+            settings.RegisterInStartup(this.ckbStartup.Checked, Application.ExecutablePath);
         }
         /* When the "Settings" tray menu item is clicked */
         private void OnSettings(object sender, EventArgs e)
@@ -128,7 +131,6 @@ namespace Copypasta
             {
                 trayIcon.Icon = SystemIcons.Application;
             }   
-
             // Add the menu to the tray icon.
             trayIcon.ContextMenu = trayMenu;
             trayIcon.Visible = true;
@@ -185,7 +187,7 @@ namespace Copypasta
 
             this.btnConfirm.Click += ConfirmClicked;
         }
-
+        /* method the form designer uses */
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(CopypastaApp));
@@ -196,10 +198,13 @@ namespace Copypasta
             this.grpTimerInterval = new System.Windows.Forms.GroupBox();
             this.numTimerInterval = new System.Windows.Forms.NumericUpDown();
             this.lblTimerInterval = new System.Windows.Forms.Label();
+            this.grpStartup = new System.Windows.Forms.GroupBox();
+            this.ckbStartup = new System.Windows.Forms.CheckBox();
             this.grpMaxClips.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numMaxClips)).BeginInit();
             this.grpTimerInterval.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numTimerInterval)).BeginInit();
+            this.grpStartup.SuspendLayout();
             this.SuspendLayout();
             // 
             // grpMaxClips
@@ -263,9 +268,29 @@ namespace Copypasta
             this.lblTimerInterval.TabIndex = 1;
             this.lblTimerInterval.Text = "Polling Interval";
             // 
+            // grpStartup
+            // 
+            this.grpStartup.Controls.Add(this.ckbStartup);
+            this.grpStartup.Location = new System.Drawing.Point(12, 100);
+            this.grpStartup.Name = "grpStartup";
+            this.grpStartup.Size = new System.Drawing.Size(185, 35);
+            this.grpStartup.TabIndex = 6;
+            this.grpStartup.TabStop = false;
+            // 
+            // ckbStartup
+            // 
+            this.ckbStartup.AutoSize = true;
+            this.ckbStartup.Location = new System.Drawing.Point(31, 12);
+            this.ckbStartup.Name = "ckbStartup";
+            this.ckbStartup.Size = new System.Drawing.Size(138, 17);
+            this.ckbStartup.TabIndex = 2;
+            this.ckbStartup.Text = "run at windows startup?";
+            this.ckbStartup.UseVisualStyleBackColor = true;
+            // 
             // CopypastaApp
             // 
             this.ClientSize = new System.Drawing.Size(214, 184);
+            this.Controls.Add(this.grpStartup);
             this.Controls.Add(this.grpTimerInterval);
             this.Controls.Add(this.btnConfirm);
             this.Controls.Add(this.grpMaxClips);
@@ -277,6 +302,8 @@ namespace Copypasta
             this.grpTimerInterval.ResumeLayout(false);
             this.grpTimerInterval.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numTimerInterval)).EndInit();
+            this.grpStartup.ResumeLayout(false);
+            this.grpStartup.PerformLayout();
             this.ResumeLayout(false);
 
         }

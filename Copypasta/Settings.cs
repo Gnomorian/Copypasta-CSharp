@@ -38,7 +38,7 @@ namespace Copypasta {
         }
 
         /* Set application to run at startup  */
-        private void RegisterInStartup(bool isChecked, string exePath) {
+        public void RegisterInStartup(bool isChecked, string exePath) {
             RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
                     ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             if (isChecked) {

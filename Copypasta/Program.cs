@@ -186,6 +186,8 @@ namespace Copypasta
             this.numTimerInterval.Value = settings.getTimerInterval();
 
             this.btnConfirm.Click += ConfirmClicked;
+
+            this.ckbStartup.Checked = settings.RunAtStartup();
         }
         /* method the form designer uses */
         private void InitializeComponent()

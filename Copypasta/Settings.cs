@@ -10,6 +10,7 @@ namespace Copypasta {
         //TODO: change this to a collection with strings as keys
         private int timerInterval = 200;
         private int maxClips = 10;
+        private bool runAtStartup = false;
 
         // Registry key to save to
         private static string key = "HKEY_CURRENT_USER\\Copypasta";
@@ -46,6 +47,16 @@ namespace Copypasta {
             } else {
                 registryKey.DeleteValue("Copypasta");
             }
+        }
+
+        /* checks if application runs at startup */
+        public bool RunAtStartup() {
+            RegistryKey registryKey = Registry.CurrentUser.OpenSubKey
+                    ("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            if(registryKey.GetValue("Copypasta") != null && registryKey.GetValue("Copypasta") != "") {
+                return true;
+            }
+            return false;
         }
 
         /* set the key in the registry to the given value */

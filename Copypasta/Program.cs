@@ -61,7 +61,7 @@ namespace Copypasta
         {
             foreach (MenuItem item in trayIcon.ContextMenu.MenuItems)
             {
-                if(item.Text == clip)
+                if(item.GetType() == typeof(CopyMenuItem) && ((CopyMenuItem)item).GetClip() == clip)
                 {
                     return true;
                 }
@@ -72,7 +72,8 @@ namespace Copypasta
         /* Method called on Menu Click, Replaces the current clipboard text with that of the menu clicked */
         private void ReplaceClipboard(object sender, EventArgs e)
         {
-            Clipboard.SetText(((MenuItem)sender).Text);
+            CopyMenuItem item = (CopyMenuItem)sender;
+            Clipboard.SetText(item.GetClip());
         }
 
         /* Adds a new Clip to the Menu and removes eldest clip if we are adding more than the maxClips */
@@ -83,7 +84,7 @@ namespace Copypasta
             {
                 items.RemoveAt(2);
             }
-            items.Add(clip, ReplaceClipboard);
+            items.Add(new CopyMenuItem(clip, ReplaceClipboard));
         }
         /* event handler run when the settings menu button Confirm is clicked */
         private void ConfirmClicked(object sender, EventArgs e)
@@ -310,5 +311,25 @@ namespace Copypasta
 
         }
 
+    }
+
+    /* Custom MenuItem class to contain the Full Clipboard entry and the Shortened version visible on the menu */
+    class CopyMenuItem : MenuItem
+    {
+        private string clipboard;
+
+        public CopyMenuItem(string value, EventHandler onClick) : base()
+        {
+            clipboard = value;
+            this.Click += onClick;
+            if (value.Length > 50)
+                this.Text = value.Substring(0, 50) + "...";
+            this.Text.Replace(" ", "");
+        }
+
+        public string GetClip()
+        {
+            return clipboard;
+        }
     }
 }

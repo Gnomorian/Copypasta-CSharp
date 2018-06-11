@@ -323,11 +323,11 @@ namespace Copypasta
             clipboard = value;
             this.Click += onClick;
             this.Text = (string)value.Clone();
+            this.Text = this.Text.Trim('\n', '\r');
             this.Text = this.Text.TrimStart('\t', ' ');
             if (this.Text.Length > 50) {
                 this.Text = this.Text.Substring(0, 50) + "...";
             }
-            Console.WriteLine("-------------------------");
         }
 
         public string GetClip()

@@ -322,9 +322,15 @@ namespace Copypasta
         {
             clipboard = value;
             this.Click += onClick;
-            if (value.Length > 50)
-                this.Text = value.Substring(0, 50) + "...";
-            this.Text.Replace(" ", "");
+            this.Text = value;
+            Console.WriteLine("Before edit text is " + this.Text);
+            this.Text = this.Text.TrimStart('\t', ' ');
+            Console.WriteLine("Removed whitespace " + this.Text);
+            if (this.Text.Length > 50) {
+                this.Text = this.Text.Substring(0, 50) + "...";
+                Console.WriteLine("Shortened to 50 characters " + this.Text);
+            }
+            Console.WriteLine("-------------------------");
         }
 
         public string GetClip()
